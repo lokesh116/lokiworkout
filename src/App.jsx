@@ -122,16 +122,8 @@ const GLOBAL_CSS = `
   }
 
   /* Light leaks */
-  .light-leak-left {
-    position: fixed; left:0; top:0; bottom:0; width:6px;
-    background: linear-gradient(180deg, ${V.magenta}, ${V.yellow}, ${V.cyan}, ${V.magenta});
-    opacity:0.7; pointer-events:none; z-index:998;
-  }
-  .light-leak-right {
-    position: fixed; right:0; top:0; bottom:0; width:6px;
-    background: linear-gradient(180deg, ${V.cyan}, ${V.yellow}, ${V.magenta}, ${V.cyan});
-    opacity:0.7; pointer-events:none; z-index:998;
-  }
+  .light-leak-left { display:none; }
+  .light-leak-right { display:none; }
 
   ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: ${V.bgDeep}; }

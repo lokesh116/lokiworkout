@@ -10,8 +10,8 @@ const IMG_MILES_ACTION = "data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHY
 const V = {
   bg:       "#0D0A1A",
   bgDeep:   "#07050F",
-  panel:    "#12102A",
-  panelAlt: "#1A1535",
+  panel:    "#16122E",
+  panelAlt: "#1E1840",
   border:   "#2A2550",
   red:      "#EE2156",
   magenta:  "#FF007F",
@@ -256,9 +256,23 @@ function GlitchCB({checked,onToggle,color}){
 
 function Panel({children,style={},color,nopad,no3d}){
   const c=color||V.border;
+  // extract base hex from color (strip alpha suffix like "44")
+  const baseC=c.length>7?c.slice(0,7):c;
   return(
-    <div style={{background:"rgba(10,7,25,0.85)",borderRadius:18,padding:nopad?0:"16px 18px",marginBottom:14,border:"none",backdropFilter:"blur(14px)",WebkitBackdropFilter:"blur(14px)",boxShadow:`0 10px 40px rgba(0,0,0,0.75), 0 2px 12px ${c}16`,transition:"transform 0.25s, box-shadow 0.25s",animation:no3d?"none":"card-3d 8s ease-in-out infinite",...style}}
-      onMouseEnter={e=>{if(!no3d){e.currentTarget.style.transform="perspective(800px) rotateX(0deg) rotateY(0deg) scale(1.02)";e.currentTarget.style.boxShadow=`0 20px 60px rgba(0,0,0,0.9), 0 4px 20px ${c}44`;e.currentTarget.style.animation="none";}}}
+    <div style={{
+      background:`linear-gradient(135deg, ${baseC}28 0%, #16102e 55%, ${baseC}14 100%)`,
+      borderRadius:18,
+      padding:nopad?0:"16px 18px",
+      marginBottom:14,
+      border:`1px solid ${baseC}55`,
+      borderLeft:`3px solid ${baseC}`,
+      backdropFilter:"none",
+      WebkitBackdropFilter:"none",
+      boxShadow:`0 8px 32px rgba(0,0,0,0.9), 0 2px 12px ${baseC}22, inset 0 0 30px ${baseC}06`,
+      transition:"transform 0.25s, box-shadow 0.25s",
+      animation:no3d?"none":"card-3d 8s ease-in-out infinite",
+      ...style}}
+      onMouseEnter={e=>{if(!no3d){e.currentTarget.style.transform="perspective(800px) rotateX(0deg) rotateY(0deg) scale(1.02)";e.currentTarget.style.boxShadow=`0 20px 60px rgba(0,0,0,0.95), 0 4px 20px ${baseC}55`;e.currentTarget.style.animation="none";}}}
       onMouseLeave={e=>{if(!no3d){e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="";e.currentTarget.style.animation="card-3d 8s ease-in-out infinite";}}}>
       {children}
     </div>
@@ -302,7 +316,7 @@ function Dashboard({mealChecked,workoutChecked,weights,workoutDay,waterChecked,s
   return(
     <div>
       {/* GOAL PRISM */}
-      <div style={{background:`linear-gradient(135deg,${V.bgDeep},${V.purple}33,${V.bgDeep})`,border:`2px solid ${V.magenta}`,borderRadius:20,padding:"20px",marginBottom:14,position:"relative",overflow:"hidden",boxShadow:`0 0 40px ${V.magenta}44, inset 0 0 60px ${V.purple}22`,minHeight:180}}>
+      <div style={{background:`linear-gradient(135deg, #1a0a32 0%, #2a1055 50%, #130924 100%)`,border:`2px solid ${V.magenta}`,borderRadius:20,padding:"20px",marginBottom:14,position:"relative",overflow:"hidden",boxShadow:`0 0 40px ${V.magenta}66, inset 0 0 60px #3a1a6044`,minHeight:180}}>
         {/* Miles Morales action pose — right side */}
         <img src={IMG_MILES_ACTION} alt="" style={{position:"absolute",right:-20,bottom:-10,height:200,objectFit:"contain",opacity:0.5,pointerEvents:"none",animation:"float2 5s ease-in-out infinite",filter:"drop-shadow(0 0 20px #EE215666)",transform:"scaleX(-1)"}}/>
         {/* Spider symbol watermark */}
@@ -340,7 +354,7 @@ function Dashboard({mealChecked,workoutChecked,weights,workoutDay,waterChecked,s
           {label:"WATER",val:`${(wMl/1000).toFixed(1)}L`,sub:"/3.75L",pct:(wMl/3750)*100,color:V.cyan,tab:"water"},
           {label:"STREAK",val:`${streak}d`,sub:"days",pct:Math.min(streak*10,100),color:V.yellow,tab:null},
         ].map(({label,val,sub,pct,color,tab:tb})=>(
-          <div key={label} onClick={()=>tb&&setTab(tb)} style={{background:`linear-gradient(135deg,${V.bgDeep},${V.panel})`,borderRadius:12,padding:"10px 4px 8px",border:`1px solid ${color}44`,textAlign:"center",cursor:tb?"pointer":"default",boxShadow:`0 4px 20px ${color}22`}}>
+          <div key={label} onClick={()=>tb&&setTab(tb)} style={{background:color===V.red?`linear-gradient(145deg,#2d0e1c,#1a091a)`:color===V.magenta?`linear-gradient(145deg,#2a0a22,#1a091a)`:color===V.cyan?`linear-gradient(145deg,#0c2232,#0a1820)`:color===V.yellow?`linear-gradient(145deg,#231c08,#181208)`:`linear-gradient(145deg,#1a0d28,#12091f)`,borderRadius:12,padding:"10px 4px 8px",border:`1px solid ${color}88`,borderTop:`2px solid ${color}`,textAlign:"center",cursor:tb?"pointer":"default",boxShadow:`0 4px 20px ${color}33`}}>
             <div style={{fontFamily:"'Bangers',cursive",fontSize:10,color:color,letterSpacing:2,marginBottom:6,filter:`drop-shadow(0 0 6px ${color})`}}>{label}</div>
             <NeonRing pct={pct} color={color} size={52} stroke={4}>
               <span style={{fontFamily:"'Bangers',cursive",fontSize:typeof val==="number"&&val>999?10:13,color,letterSpacing:0,filter:`drop-shadow(0 0 6px ${color})`}}>{typeof val==="number"?val.toLocaleString():val}</span>
@@ -577,7 +591,7 @@ function WorkoutTracker({workoutChecked,setWorkoutChecked,workoutDay,setWorkoutD
                 <div style={{flex:1}}><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontFamily:"'Rajdhani',sans-serif",fontSize:14,color:V.white,fontWeight:700}}>{m}</span><span style={{fontFamily:"'Share Tech Mono',monospace",fontSize:9,color:V.muted}}>{t}</span></div><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:12,color:V.soft,fontWeight:600,marginTop:2}}>{n}</div></div>
               </div>
             ))}
-            <div style={{marginTop:10,background:"rgba(74,222,128,0.08)",borderRadius:6,padding:"8px 12px",textAlign:"center",fontFamily:"'Bangers',cursive",fontSize:13,color:"#4ADE80",letterSpacing:2}}>SAME PROTEIN · SAME CALORIES · SAME 5 MEALS</div>
+            <div style={{marginTop:10,background:"#0a1c10",borderRadius:6,padding:"8px 12px",textAlign:"center",fontFamily:"'Bangers',cursive",fontSize:13,color:"#4ADE80",letterSpacing:2}}>SAME PROTEIN · SAME CALORIES · SAME 5 MEALS</div>
           </Panel>
           <Panel>
             <SLabel color={V.yellow}>⚡ OPTIONAL: CUT ~200 CAL</SLabel>
@@ -628,7 +642,7 @@ function WaterTab({waterChecked,setWaterChecked}){
 
   return(
     <div>
-      <div style={{background:`linear-gradient(135deg,${V.bgDeep},${V.cyan}18)`,border:`2px solid ${V.cyan}`,borderRadius:16,padding:"20px",marginBottom:14,textAlign:"center",boxShadow:`0 0 30px ${V.cyan}22`,position:"relative",overflow:"hidden"}}>
+      <div style={{background:`linear-gradient(135deg,#0a2230,#0e2a3a)`,border:`2px solid ${V.cyan}`,borderRadius:16,padding:"20px",marginBottom:14,textAlign:"center",boxShadow:`0 0 30px ${V.cyan}44`,position:"relative",overflow:"hidden"}}>
         <img src={IMG_MILES_SWING} alt="" style={{position:"absolute",right:-10,bottom:-10,height:160,objectFit:"contain",opacity:0.2,pointerEvents:"none",animation:"float3 5s ease-in-out infinite",filter:"drop-shadow(0 0 12px #00FFFF88)"}}/>
         <div style={{position:"relative",zIndex:1}}>
         <div style={{fontFamily:"'Share Tech Mono',monospace",fontSize:9,color:V.muted,letterSpacing:2,marginBottom:6}}>DAILY_WATER_INTAKE</div>
@@ -652,11 +666,11 @@ function WaterTab({waterChecked,setWaterChecked}){
               <div style={{fontFamily:"'Bangers',cursive",color:V.magenta,fontSize:13,letterSpacing:2,marginBottom:8}}>⏰ EAT 60–90 MIN BEFORE GYM</div>
               {[{food:"2 Wheat Chapatis",reason:"Slow carbs = sustained energy",icon:"🫓"},{food:"2 Boiled Eggs",reason:"Fast protein to protect muscle",icon:"🥚"},{food:"1 Banana",reason:"Quick glucose = instant boost",icon:"🍌"}].map((e,i)=>(<div key={i} style={{display:"flex",gap:10,marginBottom:8,paddingBottom:8,borderBottom:`1px solid ${V.border}`}}><span style={{fontSize:18}}>{e.icon}</span><div><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:13,color:V.white,fontWeight:700}}>{e.food}</div><div style={{fontFamily:"'Share Tech Mono',monospace",fontSize:9,color:V.muted,marginTop:2}}>{e.reason}</div></div></div>))}
             </div>
-            <div style={{background:"rgba(238,33,86,0.06)",borderRadius:10,padding:"12px",marginBottom:10,border:`1px solid ${V.red}33`}}>
+            <div style={{background:"#200a10",borderRadius:10,padding:"12px",marginBottom:10,border:`1px solid ${V.red}44`}}>
               <div style={{fontFamily:"'Bangers',cursive",color:V.red,fontSize:13,letterSpacing:2,marginBottom:8}}>❌ AVOID BEFORE GYM</div>
               {[{f:"Heavy rice + dal",r:"Makes you heavy and sleepy"},{f:"Full milk (300ml)",r:"May cause nausea mid-lifts"},{f:"Oily food",r:"Sluggish mid-session"},{f:"Empty stomach",r:"Muscle breakdown + dizziness"}].map((e,i)=>(<div key={i} style={{marginBottom:5,paddingBottom:5,borderBottom:`1px solid ${V.border}`,fontFamily:"'Share Tech Mono',monospace",fontSize:9}}><span style={{color:V.red,fontWeight:700}}>✗ {e.f}: </span><span style={{color:V.muted}}>{e.r}</span></div>))}
             </div>
-            <div style={{background:"rgba(74,222,128,0.06)",borderRadius:10,padding:"12px",border:"1px solid rgba(74,222,128,0.3)"}}>
+            <div style={{background:"#0a1c10",borderRadius:10,padding:"12px",border:"1px solid #4ADE8055"}}>
               <div style={{fontFamily:"'Bangers',cursive",color:"#4ADE80",fontSize:13,letterSpacing:2,marginBottom:8}}>🔥 POST WORKOUT — WITHIN 45 MIN</div>
               {[{food:"3 Boiled Eggs",reason:"Fast protein for muscle repair",icon:"🥚"},{food:"Rice + Dal (small bowl)",reason:"Perfect post-workout carb",icon:"🍚"},{food:"500ml Water",reason:"Replace sweat loss",icon:"💧"}].map((e,i)=>(<div key={i} style={{display:"flex",gap:10,marginBottom:8,paddingBottom:8,borderBottom:`1px solid ${V.border}`}}><span style={{fontSize:18}}>{e.icon}</span><div><div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:13,color:V.white,fontWeight:700}}>{e.food}</div><div style={{fontFamily:"'Share Tech Mono',monospace",fontSize:9,color:V.muted,marginTop:2}}>{e.reason}</div></div></div>))}
             </div>
@@ -697,7 +711,7 @@ function WeightTracker({weights,setWeights}){
         {err&&<div style={{fontFamily:"'Share Tech Mono',monospace",color:V.red,fontSize:10,marginTop:8}}>{err}</div>}
       </Panel>
 
-      <div style={{background:`linear-gradient(135deg,${V.bgDeep},${V.purple}22)`,border:`2px solid ${V.magenta}`,borderRadius:16,padding:"20px",marginBottom:14,boxShadow:`0 0 30px ${V.magenta}22`}}>
+      <div style={{background:`linear-gradient(135deg,#140a28,#1e1040)`,border:`2px solid ${V.magenta}`,borderRadius:16,padding:"20px",marginBottom:14,boxShadow:`0 0 30px ${V.magenta}33`}}>
         <div style={{display:"flex",justifyContent:"space-around",marginBottom:16}}>
           {[{l:"START",v:"60 kg",c:V.muted},{l:"CURRENT",v:`${latest} kg`,c:V.cyan},{l:"GOAL",v:"70 kg",c:V.yellow}].map(({l,v,c})=>(
             <div key={l} style={{textAlign:"center"}}><div style={{fontFamily:"'Bangers',cursive",fontSize:30,color:c,letterSpacing:1,filter:`drop-shadow(0 0 8px ${c}88)`}}>{v}</div><div style={{fontFamily:"'Share Tech Mono',monospace",fontSize:8,color:V.muted,marginTop:2}}>{l}</div></div>
@@ -758,7 +772,7 @@ function TipsTab({mealChecked,workoutChecked,weights}){
   return(
     <div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>
-        {S.map(s=>(<div key={s.id} onClick={()=>setSec(s.id)} style={{background:sec===s.id?`${s.color}18`:V.panel,borderRadius:12,padding:"13px 16px",border:`${sec===s.id?"2px":"1px"} solid ${sec===s.id?s.color:V.border}`,cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"all .2s",boxShadow:sec===s.id?`0 0 16px ${s.color}33`:"none"}}>
+        {S.map(s=>(<div key={s.id} onClick={()=>setSec(s.id)} style={{background:sec===s.id?s.color===V.red?`linear-gradient(135deg,#2d0e1c,#1e091a)`:s.color===V.magenta?`linear-gradient(135deg,#2a0a22,#1a091a)`:s.color===V.cyan?`linear-gradient(135deg,#0c2232,#0a1820)`:`linear-gradient(135deg,#231c08,#181208)`:V.panel,borderRadius:12,padding:"13px 16px",border:`${sec===s.id?"2px":"1px"} solid ${sec===s.id?s.color:V.border}`,cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"all .2s",boxShadow:sec===s.id?`0 0 16px ${s.color}55`:"none"}}>
           <span style={{fontSize:22}}>{s.icon}</span>
           <span style={{fontFamily:"'Bangers',cursive",color:sec===s.id?s.color:V.soft,fontSize:14,letterSpacing:2}}>{s.title}</span>
         </div>))}
@@ -767,7 +781,7 @@ function TipsTab({mealChecked,workoutChecked,weights}){
       {sec==="lean"&&(
         <div>
           {/* Miles Morales themed — crimson + web texture */}
-          <div style={{background:`linear-gradient(135deg,${V.red}18,${V.bgDeep})`,border:`1px solid ${V.red}55`,borderRadius:16,padding:"16px",marginBottom:12,position:"relative",overflow:"hidden"}}>
+          <div style={{background:`linear-gradient(135deg,#2a0e18,#1c0912)`,border:`1px solid ${V.red}66`,borderRadius:16,padding:"16px",marginBottom:12,position:"relative",overflow:"hidden"}}>
             <div style={{position:"absolute",right:-10,bottom:-20,fontSize:80,opacity:0.04,lineHeight:1,pointerEvents:"none",userSelect:"none",transform:"rotate(15deg)"}}>🕷️</div>
             <SLabel color={V.red}>LEAN BULK — PURE MUSCLE</SLabel>
             <div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:13,color:V.soft,lineHeight:1.8,fontWeight:600}}>At 60kg / 5'7" your fat is naturally low. Surplus is only <span style={{color:V.red,fontWeight:800}}>+500 cal</span> — builds muscle WITHOUT visible fat. Dirty bulk = fat face. This plan keeps you lean.</div>
@@ -797,7 +811,7 @@ function TipsTab({mealChecked,workoutChecked,weights}){
 
       {sec==="prog"&&(
         <div>
-          <div style={{background:`linear-gradient(135deg,${V.bgDeep},${V.cyan}18)`,border:`2px solid ${V.cyan}`,borderRadius:16,padding:"20px",marginBottom:14,textAlign:"center",boxShadow:`0 0 30px ${V.cyan}22`,position:"relative",overflow:"hidden"}}>
+          <div style={{background:`linear-gradient(135deg,#0a2230,#0e2a3a)`,border:`2px solid ${V.cyan}`,borderRadius:16,padding:"20px",marginBottom:14,textAlign:"center",boxShadow:`0 0 30px ${V.cyan}44`,position:"relative",overflow:"hidden"}}>
             <img src={IMG_MILES_FACE} alt="" style={{position:"absolute",right:10,bottom:-10,height:120,objectFit:"contain",objectPosition:"top",opacity:0.2,pointerEvents:"none",animation:"float2 6s ease-in-out infinite",filter:"drop-shadow(0 0 12px #00FFFF88)"}}/>
             <div style={{fontFamily:"'Share Tech Mono',monospace",fontSize:8,color:V.muted,letterSpacing:2,marginBottom:6}}>14-DAY_CONSISTENCY_SCORE</div>
             <div style={{fontFamily:"'Bangers',cursive",fontSize:66,color:avg>=70?V.cyan:avg>=40?V.yellow:V.red,letterSpacing:3,lineHeight:1,filter:`drop-shadow(0 0 20px ${avg>=70?V.cyan:avg>=40?V.yellow:V.red}88)`}}>{avg}<span style={{fontSize:26}}>/100</span></div>
@@ -959,13 +973,13 @@ export default function App(){
       </div>
 
       {/* BOTTOM NAV */}
-      <div style={{position:"fixed",bottom:0,left:0,right:0,background:`${V.bgDeep}f5`,borderTop:"none",display:"flex",padding:"5px 0 10px",zIndex:100,backdropFilter:"blur(20px)",boxShadow:"0 -4px 30px rgba(0,0,0,0.7)"}}>
+      <div style={{position:"fixed",bottom:0,left:0,right:0,background:`#0a0718`,borderTop:`2px solid ${accent}66`,display:"flex",padding:"5px 0 10px",zIndex:100,boxShadow:`0 -4px 30px rgba(0,0,0,0.95), 0 -1px 0 ${accent}44`}}>
         {TABS.map(t=>{
           const active=tab===t.id,col=ACCENT[t.id];
           return(
             <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,background:"transparent",border:"none",cursor:"pointer",padding:"4px 2px",display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-              <div style={{width:30,height:30,borderRadius:8,background:active?`${col}22`:"transparent",border:"none",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,transition:"all .2s",boxShadow:active?`0 0 12px ${col}66`:"none"}}>{t.icon}</div>
-              <span style={{fontFamily:"'Bangers',cursive",fontSize:7,color:active?col:V.muted,letterSpacing:1,filter:active?`drop-shadow(0 0 4px ${col}88)`:"none"}}>{t.label}</span>
+              <div style={{width:30,height:30,borderRadius:8,background:active?`${col}33`:"transparent",border:active?`1px solid ${col}66`:"1px solid transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,transition:"all .2s",boxShadow:active?`0 0 14px ${col}77, inset 0 0 8px ${col}22`:"none"}}>{t.icon}</div>
+              <span style={{fontFamily:"'Bangers',cursive",fontSize:7,color:active?col:"#4a3a6a",letterSpacing:1,filter:active?`drop-shadow(0 0 6px ${col})`:"none"}}>{t.label}</span>
             </button>
           );
         })}
